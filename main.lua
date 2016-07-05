@@ -7,11 +7,20 @@ require 'src.building'
 require 'src.world'
 require 'src.blueprint'
 require 'src.hud'
+require 'src.stack'
 
 STATE = {
     SELECT = 1,
     BUILD = 2
 }
+
+stt = Stack({1,2,3})
+stt:push(5)
+stt:push(7)
+
+print("Size: "..stt:pop())
+print("Size: "..stt:pop())
+print("Size: "..stt:pop())
 
 buildings = {}
 blueprint = Blueprint(5)

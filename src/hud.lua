@@ -21,7 +21,7 @@ function Hud:update()
     self.wHeight = love.graphics.getHeight()
     self.qOrigin = Vector(self.wWidth - 96, 128)
 
-    self.suit.layout:reset(100, 100, 20, 20)
+    self.suit.layout:reset(self.qOrigin.x, self.qOrigin.y, 20, 20)
 
     -- put a button at the layout origin
     -- the cell of the button has a size of 200 by 30 pixels
