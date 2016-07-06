@@ -6,6 +6,7 @@ require 'src.blueprint'
 require 'src.building'
 require 'src.camera'
 require 'src.hud'
+require 'src.state'
 require 'src.stack'
 require 'src.world'
 
@@ -17,6 +18,8 @@ function love.load()
     world = World(love.graphics.newImage('assets/gfx/tileset.png'), 128, 128)
     hud = Hud()
     cameraManager = CameraManager()
+    gameState = Stack()
+    gameState:push(STATE.DEFAULT)
 
     world:populate()
 end
@@ -27,9 +30,12 @@ function love.draw()
     world:draw()
     cameraManager:detach()
 
+    gameState:top():draw()
+
     hud:draw()
 
-    love.graphics.print("FPS: "..love.timer.getFPS(), 32, 32)
+    love.graphics.print("FPS: "..love.timer.getFPS(), 16, 48)
+    love.graphics.print("State: "..gameState:top().name, 16, 64)
 end
 
 --- Callback function used for every update frame.
@@ -37,6 +43,7 @@ end
 function love.update(dt)
     world:update(dt)
     cameraManager:update(dt)
+    gameState:top():update(dt)
     hud:update(dt)
 end
 
@@ -59,4 +66,5 @@ end
 -- @param button The registered mouse button
 -- @param istouch Indicating whether or not the registered event was caused by a touch
 function love.mousepressed(x, y, button, istouch)
+    gameState:top():click(x, y, button)
 end

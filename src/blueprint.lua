@@ -7,7 +7,7 @@ function Blueprint:init(building)
     self.canBuild = false
 end
 
-function Blueprint:update()
+function Blueprint:update(dt)
     local mx, my = cameraManager:getCamera():mousePosition()
 
     self.x = (math.floor(mx/16) )*16
@@ -17,4 +17,8 @@ function Blueprint:update()
     if self.y < 0 then self.y = 0 end
 
     -- todo: Check upper bounds
+end
+
+function Blueprint:draw()
+    love.graphics.draw(self.building.gfx, self.x, self.y)
 end
