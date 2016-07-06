@@ -51,8 +51,14 @@ end
 
 function World:draw()
     love.graphics.draw(self.sb)
+
+    love.graphics.setColor(255,0,0,255)
+    love.graphics.line(0, 0, 16, 0)
+    love.graphics.setColor(0, 255,0,255)
+    love.graphics.line(0, 0, 0, 16)
+    love.graphics.setColor(255, 255, 255, 255)
 end
 
-function World:update()
+function World:update(dt)
 
 end

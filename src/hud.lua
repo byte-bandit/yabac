@@ -16,7 +16,7 @@ function Hud:draw()
     self.suit.draw()
 end
 
-function Hud:update()
+function Hud:update(dt)
     self.wWidth = love.graphics.getWidth()
     self.wHeight = love.graphics.getHeight()
     self.qOrigin = Vector(self.wWidth - 96, 128)
@@ -25,16 +25,18 @@ function Hud:update()
 
     -- put a button at the layout origin
     -- the cell of the button has a size of 200 by 30 pixels
-    local state = self.suit.Button("Click?", self.suit.layout:row(200,30))
+    -- local state = self.suit.Button("Click?", self.suit.layout:row(200,30))
 
     -- if the button was pressed, take damage
-    if state.hit then print("Ouch!") end
+    -- if state.hit then print("Ouch!") end
 end
 
 function Hud:drawBuildingList()
     local c = 0
     for _,v in ipairs(BuildingTable) do
-        love.graphics.draw(v.gfx, self.qOrigin.x + (c * 32), self.qOrigin.y)
+        -- love.graphics.draw(v.gfx, self.qOrigin.x + (c * 32), self.qOrigin.y)
+        local state = self.suit.ImageButton(v.gfx, {}, self.suit.layout:row(36,36))
+        if state.hit then print("Ouch!") end
         c = c + 1
     end
 end

@@ -1,62 +1,30 @@
-Class = require 'lib.hump.class'
 Camera = require 'lib.hump.camera'
+Class = require 'lib.hump.class'
 Vector = require 'lib.hump.vector'
 
-require 'src.camera'
-require 'src.building'
-require 'src.world'
 require 'src.blueprint'
+require 'src.building'
+require 'src.camera'
 require 'src.hud'
 require 'src.stack'
+require 'src.world'
 
-STATE = {
-    SELECT = 1,
-    BUILD = 2
-}
+require 'data.buildings'
+require 'data.states'
 
-stt = Stack({1,2,3})
-stt:push(5)
-stt:push(7)
-
-print("Size: "..stt:pop())
-print("Size: "..stt:pop())
-print("Size: "..stt:pop())
-
-buildings = {}
-blueprint = Blueprint(5)
-
+--- Callback function used for initial loading.
 function love.load()
-    local tileset = love.graphics.newImage('assets/gfx/tileset.png')
-    house = love.graphics.newImage('assets/gfx/house.png')
-
-    cameraManager = CameraManager()
-    world = World(tileset, 128, 128)
-    world:populate()
-
-    require 'data.buildings'
-
+    world = World(love.graphics.newImage('assets/gfx/tileset.png'), 128, 128)
     hud = Hud()
+    cameraManager = CameraManager()
+
+    world:populate()
 end
 
+--- Callback function used for every draw frame.
 function love.draw()
     cameraManager:attach()
-
-    love.graphics.setColor(255,0,0,255)
-    love.graphics.line(0, 0, 16, 0)
-    love.graphics.setColor(0, 255,0,255)
-    love.graphics.line(0, 0, 0, 16)
-    love.graphics.setColor(255, 255, 255, 255)
-
     world:draw()
-
-    if blueprint.canbuild then love.graphics.setColor(0, 255, 0, 127) else love.graphics.setColor(255, 0, 0, 127) end
-    love.graphics.draw(house, blueprint.x, blueprint.y)
-    love.graphics.setColor(255, 255, 255, 255)
-
-    for _,v in ipairs(buildings) do
-        love.graphics.draw(house, v.x, v.y)
-    end
-
     cameraManager:detach()
 
     hud:draw()
@@ -64,32 +32,31 @@ function love.draw()
     love.graphics.print("FPS: "..love.timer.getFPS(), 32, 32)
 end
 
-function love.update()
-    cameraManager:update()
-    world:update()
-    blueprint:update()
-    hud:update()
-
-    local ox = blueprint.x / 32
-    local oy = blueprint.y / 32
-
-    --if (lens[ox][oy] == 0 and lens[ox+1][oy] == 0 and lens[ox][oy+1] == 0 and lens[ox+1][oy+1] == 0) then
-    --    blueprint.canbuild = true
-    --else
-    --    blueprint.canbuild = false
-    --end
+--- Callback function used for every update frame.
+-- @param dt Delta time since the last update
+function love.update(dt)
+    world:update(dt)
+    cameraManager:update(dt)
+    hud:update(dt)
 end
 
+--- Callback function used for key pressed events.
+-- @param key The pressed key
 function love.keypressed(key)
+    if key == 'escape' then love.event.quit() end
 end
 
+--- Callback function used for mouse wheel moved events.
+-- @param x The delta x of the mouse wheel movement
+-- @param y The delta y of the mouse wheel movement
 function love:wheelmoved(x, y)
     cameraManager:handleMouseWheel(x, y)
 end
 
+--- Callback function used for mouse button pressed events.
+-- @param x The x coordinate of the registered click event
+-- @param y The y coordinate of the registered click event
+-- @param button The registered mouse button
+-- @param istouch Indicating whether or not the registered event was caused by a touch
 function love.mousepressed(x, y, button, istouch)
-    if (button == 1 and blueprint.canbuild) then
-        table.insert(buildings, Building(blueprint.x, blueprint.y))
-        print("Amount of buildings: "..#buildings)
-    end
 end

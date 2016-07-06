@@ -16,7 +16,7 @@ function CameraManager:detach()
   self.camera:detach()
 end
 
-function CameraManager:update()
+function CameraManager:update(dt)
   if love.keyboard.isDown('up') then
     self.camera:move(0, -self.scrollspeed)
   end
