@@ -5,6 +5,7 @@ Vector = require 'lib.hump.vector'
 require 'src.blueprint'
 require 'src.building'
 require 'src.camera'
+require 'src.debug'
 require 'src.hud'
 require 'src.state'
 require 'src.stack'
@@ -34,8 +35,9 @@ function love.draw()
 
     hud:draw()
 
-    love.graphics.print("FPS: "..love.timer.getFPS(), 16, 48)
-    love.graphics.print("State: "..gameState:top().name, 16, 64)
+    Debug:print(
+        "FPS: "..love.timer.getFPS(), 
+        "State: "..gameState:top().name)
 end
 
 --- Callback function used for every update frame.

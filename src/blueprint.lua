@@ -20,5 +20,7 @@ function Blueprint:update(dt)
 end
 
 function Blueprint:draw()
+    cameraManager:attach()
     love.graphics.draw(self.building.gfx, self.x, self.y)
+    cameraManager:detach()
 end
