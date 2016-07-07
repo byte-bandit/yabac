@@ -60,5 +60,11 @@ function World:draw()
 end
 
 function World:update(dt)
+    local mx, my = cameraManager:getCamera():mousePosition()
 
+    local cx = math:clamp(0, (math.floor(mx/16) ), world.width)
+    local cy = math:clamp(0, (math.floor(my/16) ), world.height)
+
+    Debug:print("Mouse world: ["..mx..", "..my.."]")
+    Debug:print("Hovering tile: "..self.terrainInfo[cx][cy].."["..cx..", "..cy.."]")
 end

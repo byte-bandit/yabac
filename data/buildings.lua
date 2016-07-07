@@ -22,3 +22,7 @@ BuildingTable =
         size = Vector(1,1)
     },
 }
+
+for i,v in ipairs(BuildingTable) do
+    Class.include(v, Building)
+end

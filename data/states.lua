@@ -4,7 +4,13 @@ STATE.DEFAULT = State("default")
 STATE.BUILD = State("build")
 
 STATE.BUILD.click = function(self, x, y, button)
-    if button == 2 then gameState:pop() end
+    if button == 2 then 
+        gameState:pop()
+    elseif button == 1 then
+        if self.blueprint.canBuild then
+            table.insert(buildings, self.blueprint:create())
+        end
+    end
 end
 
 STATE.BUILD.draw = function(self)

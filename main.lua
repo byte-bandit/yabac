@@ -14,6 +14,18 @@ require 'src.world'
 require 'data.buildings'
 require 'data.states'
 
+buildings = {}
+
+a = Class {}
+function a:doshit()
+    print("OH HI")
+end
+
+b = {}
+Class.include(b, a)
+
+b:doshit()
+
 --- Callback function used for initial loading.
 function love.load()
     world = World(love.graphics.newImage('assets/gfx/tileset.png'), 128, 128)
@@ -29,15 +41,16 @@ end
 function love.draw()
     cameraManager:attach()
     world:draw()
+    for i,v in ipairs(buildings) do
+        v:draw()
+    end
     cameraManager:detach()
 
     gameState:top():draw()
 
     hud:draw()
 
-    Debug:print(
-        "FPS: "..love.timer.getFPS(), 
-        "State: "..gameState:top().name)
+    Debug:draw()
 end
 
 --- Callback function used for every update frame.
@@ -47,6 +60,10 @@ function love.update(dt)
     cameraManager:update(dt)
     gameState:top():update(dt)
     hud:update(dt)
+
+    Debug:print(
+        "FPS: "..love.timer.getFPS(), 
+        "State: "..gameState:top().name)
 end
 
 --- Callback function used for key pressed events.

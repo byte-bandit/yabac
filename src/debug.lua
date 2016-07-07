@@ -1,10 +1,13 @@
 Debug = {}
+Debug.values = {}
+
+function Debug:draw()
+    love.graphics.print(table.concat(Debug.values, "\n"), 16, 48)
+    Debug.values = {}
+end
 
 function Debug:print(...)
-    local args = {...}
-    printResult = ""
-    for i,v in ipairs(args) do
-        printResult = printResult .. tostring(v) .. "\n"
+    for i,v in ipairs({...}) do
+        table.insert(Debug.values, tostring(v))
     end
-    love.graphics.print(printResult, 16, 48)
 end
