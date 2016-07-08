@@ -28,7 +28,7 @@ b:doshit()
 
 --- Callback function used for initial loading.
 function love.load()
-    world = World(love.graphics.newImage('assets/gfx/tileset.png'), 128, 128)
+    world = World(love.graphics.newImage('assets/gfx/tileset.png'), 16, Vector(128, 128))
     hud = Hud()
     cameraManager = CameraManager()
     gameState = Stack()

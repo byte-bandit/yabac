@@ -22,8 +22,8 @@ function Blueprint:update(dt)
     self.x = (math.floor(mx/16) )*16
     self.y = (math.floor(my/16) )*16
 
-    self.x = math:clamp(0, self.x, world.width * 16)
-    self.y = math:clamp(0, self.y, world.height * 16)
+    self.x = math:clamp(0, self.x, world.size.x * 16)
+    self.y = math:clamp(0, self.y, world.size.y * 16)
 
     if world.terrainInfo[self.x/16][self.y/16] == 1 then self.canBuild = true else self.canBuild = false end
 end
