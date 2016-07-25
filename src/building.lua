@@ -1,10 +1,11 @@
 Building = Class{}
 
 function Building:init()
+    self.queueList = {}
+
     if self.output then
-        self.cdTable = {}
-        for p,v in pairs(self.output) do
-            self.cdTable[v] = 0
+        for k,v in pairs(self.output) do
+            
         end
     end
 end
@@ -14,14 +15,11 @@ function Building:draw()
 end
 
 function Building:update(dt)
-    if self.output then
-        for p,v in pairs(self.output) do
-            if self.cdTable[v] < v.cooldown then 
-                self.cdTable[v] = self.cdTable[v] + dt
-            else
-                self.cdTable[v] = 0
-                resources[v.id] = resources[v.id] + v.qty
-            end
+    for k,v in pairs(self.queueList) do
+        v:update(dt)
+
+        if (v.state == ProductionQueue.State.Finished) then
+            -- collect result and restart queue
         end
     end
 end
