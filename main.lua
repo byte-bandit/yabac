@@ -4,6 +4,7 @@ Vector = require 'lib.hump.vector'
 
 require 'src.blueprint'
 require 'src.building'
+require 'src.buildingManager'
 require 'src.camera'
 require 'src.debug'
 require 'src.hud'
@@ -12,19 +13,13 @@ require 'src.stack'
 require 'src.world'
 
 require 'data.buildings'
+require 'data.resources'
 require 'data.states'
 
-buildings = {}
-
-a = Class {}
-function a:doshit()
-    print("OH HI")
+resources = {}
+for i,v in ipairs(ResourceTable) do
+    resources[v.id] = 0
 end
-
-b = {}
-Class.include(b, a)
-
-b:doshit()
 
 --- Callback function used for initial loading.
 function love.load()
@@ -35,15 +30,15 @@ function love.load()
     gameState:push(STATE.DEFAULT)
 
     world:populate()
+
+    buildingManager = BuildingManager()
 end
 
 --- Callback function used for every draw frame.
 function love.draw()
     cameraManager:attach()
     world:draw()
-    for i,v in ipairs(buildings) do
-        v:draw()
-    end
+    buildingManager:draw()
     cameraManager:detach()
 
     gameState:top():draw()
@@ -57,6 +52,7 @@ end
 -- @param dt Delta time since the last update
 function love.update(dt)
     world:update(dt)
+    buildingManager:update(dt)
     cameraManager:update(dt)
     gameState:top():update(dt)
     hud:update(dt)

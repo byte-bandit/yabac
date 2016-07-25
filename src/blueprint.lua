@@ -13,6 +13,7 @@ function Blueprint:create()
     local b = Class.clone(self.building)
     b.x = self.x
     b.y = self.y
+    b:init()
     return b
 end
 

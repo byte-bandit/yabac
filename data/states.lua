@@ -8,7 +8,7 @@ STATE.BUILD.click = function(self, x, y, button)
         gameState:pop()
     elseif button == 1 then
         if self.blueprint.canBuild then
-            table.insert(buildings, self.blueprint:create())
+            buildingManager:addBuilding(self.blueprint:create())
         end
     end
 end
