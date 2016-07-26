@@ -72,3 +72,11 @@ function World:update(dt)
     Debug:print("Mouse world: ["..mx..", "..my.."]")
     Debug:print("Hovering tile: "..self.terrainInfo[cx][cy].."["..cx..", "..cy.."]")
 end
+
+function World:isResourceInRadius(resource, x, y, radius)
+    for i=x-radius,x+radius do
+        for n=n-radius,n+radius do
+            ic = --clamp
+        end
+    end
+end

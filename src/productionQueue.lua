@@ -5,16 +5,18 @@ ProductionQueue = Class
 		Paused = 1,
 		Running = 2,
 		Halted = 3,
-		Finished = 4
+		Finished = 4,
+		Unable = 5
 	}
 }
 
 function ProductionQueue:init(output, input, duration)
 	self.output = output
 	self.input = input
+	self.environmentalInpact = environmentalInpact
 	self.duration = duration
 	self.progress = 0
-	self.state = ProductionQueue.State.Halted
+	self.state = ProductionQueue.State.Unable
 end
 
 function ProductionQueue:update(dt)
