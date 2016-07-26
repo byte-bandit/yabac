@@ -8,6 +8,8 @@ require 'src.buildingManager'
 require 'src.camera'
 require 'src.debug'
 require 'src.hud'
+require 'src.productionQueue'
+require 'src.resourceManager'
 require 'src.state'
 require 'src.stack'
 require 'src.world'
@@ -15,11 +17,6 @@ require 'src.world'
 require 'data.buildings'
 require 'data.resources'
 require 'data.states'
-
-resources = {}
-for i,v in ipairs(ResourceTable) do
-    resources[v.id] = 0
-end
 
 --- Callback function used for initial loading.
 function love.load()
@@ -32,6 +29,7 @@ function love.load()
     world:populate()
 
     buildingManager = BuildingManager()
+    resourceManager = ResourceManager()
 end
 
 --- Callback function used for every draw frame.

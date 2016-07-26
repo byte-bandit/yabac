@@ -11,6 +11,7 @@ end
 
 function Blueprint:create()
     local b = Class.clone(self.building)
+    b.production = self.building.production
     b.x = self.x
     b.y = self.y
     b:init()

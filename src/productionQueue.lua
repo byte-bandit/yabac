@@ -1,17 +1,13 @@
-ProductionQueue = Class{}
-
-ProductionQueue.State.Paused = 0
-ProductionQueue.State.Running = 1
-ProductionQueue.State.Halted = 2
-ProductionQueue.State.Finished = 3
-
-function ProductionQueue:init()
-	self.output = {}
-	self.input = {}
-	self.duration = 0
-	self.progress = 0
-	self.state = ProductionQueue.State.Halted
-end
+ProductionQueue = Class
+{
+	State = 
+	{
+		Paused = 1,
+		Running = 2,
+		Halted = 3,
+		Finished = 4
+	}
+}
 
 function ProductionQueue:init(output, input, duration)
 	self.output = output
@@ -30,7 +26,13 @@ function ProductionQueue:update(dt)
 			self.state = ProductionQueue.State.Finished
 		end
 	elseif self.state == ProductionQueue.State.Halted then
-		-- check if input resource is available and start queue
+		if self.input then
+			if resourceManager:tryRemove(self.input) then
+				self.state = ProductionQueue.State.Running
+			end
+		else
+			self.state = ProductionQueue.State.Running
+		end
 	end
 end
 

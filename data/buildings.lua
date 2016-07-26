@@ -11,35 +11,14 @@ BuildingTable =
         name = "Lumberjack hut",
         tooltip = "The lumberjack will take care of a steady supply of wood.",
         gfx = love.graphics.newImage("assets/gfx/lumberjack.png"),
-        output =
-        {
-            {
-                id = "wood",
-                cooldown = 10,
-                qty = 1
-            }
-        }
+        production = ProductionQueue({wood=1}, nil, 6)
     },
     {
         id = "sawmill",
         name = "Sawmill",
         tooltip = "Will produce timber to build from wood.",
         gfx = love.graphics.newImage("assets/gfx/sawmill.png"),
-        output =
-        {
-            {
-                id = "timber",
-                cooldown = 15,
-                qty = 1,
-                input =
-                {
-                    {
-                        id = "wood",
-                        qty = 1
-                    }
-                }
-            }
-        }
+        production = ProductionQueue({timber=1}, {wood=1}, 3)                
     },
 }
 

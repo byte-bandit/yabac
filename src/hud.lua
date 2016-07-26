@@ -14,10 +14,9 @@ function Hud:draw()
     self.suit.draw()
 
     offset = 0
-    for k,v in pairs(resources) do
-        r = ResourceTable:getResource(k)
+    for k,v in pairs(resourceManager.resources) do
         if v > 0 then
-            love.graphics.draw(r.gfx, 8 + (48 * offset), 8)
+            love.graphics.draw(ResourceTable[k].gfx, 8 + (48 * offset), 8)
             love.graphics.print(v, 32 + (48 * offset), 10)
             offset = offset + 1
         end

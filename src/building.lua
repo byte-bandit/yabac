@@ -1,13 +1,6 @@
 Building = Class{}
 
 function Building:init()
-    self.queueList = {}
-
-    if self.output then
-        for k,v in pairs(self.output) do
-            
-        end
-    end
 end
 
 function Building:draw()
@@ -15,11 +8,13 @@ function Building:draw()
 end
 
 function Building:update(dt)
-    for k,v in pairs(self.queueList) do
-        v:update(dt)
+    if self.production then
+        self.production:update(dt)
 
-        if (v.state == ProductionQueue.State.Finished) then
-            -- collect result and restart queue
+        if self.production.state == ProductionQueue.State.Finished then
+            resourceManager:add(self.production.output)
+            self.production.progress = 0
+            self.production.state = ProductionQueue.State.Halted
         end
     end
 end
