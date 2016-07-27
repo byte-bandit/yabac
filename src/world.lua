@@ -1,9 +1,3 @@
-require 'src.noise'
-
-local function load()
-    perlin:load()
-end
-
 World = Class {}
 
 function World:init(tileset, grain, size, seed)
@@ -19,36 +13,89 @@ function World:init(tileset, grain, size, seed)
     local tw = tileset:getWidth()
     local th = tileset:getHeight()
 
-    self.quads = {}
-    self.quads["grass"] = love.graphics.newQuad(0, 0, self.grain, self.grain, tw, th)
-    self.quads["water"] = love.graphics.newQuad(7 * self.grain, 0, self.grain, self.grain, tw, th)
-    self.quads["mountain"] = love.graphics.newQuad(3 * self.grain, 0, self.grain, self.grain, tw, th)
-    self.quads["forest"] = love.graphics.newQuad(2 * self.grain, 0, self.grain, self.grain, tw, th)
+    self.terrainIds = {}
+    self.terrainIds["water"] = 0
+    self.terrainIds["grass"] = 1
+    self.terrainIds["forest"] = 2
+    self.terrainIds["mountain"] = 3
 
-    load()
+    self.quads = {}
+    self.quads["grass"] = {id = self.terrainIds["grass"], quad = love.graphics.newQuad(0, 0, self.grain, self.grain, tw, th)}
+    self.quads["water"] = {id = self.terrainIds["water"], quad = love.graphics.newQuad(7 * self.grain, 0, self.grain, self.grain, tw, th)}
+    self.quads["mountain"] = {id = self.terrainIds["mountain"], quad = love.graphics.newQuad(3 * self.grain, 0, self.grain, self.grain, tw, th)}
+    self.quads["forest"] = {id = self.terrainIds["forest"], quad = love.graphics.newQuad(2 * self.grain, 0, self.grain, self.grain, tw, th)}
+end
+
+function World:addQuad(point, q)
+    local x = point.x
+    local y = point.y
+    local quad = self.quads[q]
+
+    self.terrainInfo[x][y] = quad.id
+    self.quadInfo[x][y] = self.sb:add(quad.quad, x * self.grain, y * self.grain)
+end
+
+function World:setQuad(point, q)
+    local x = point.x
+    local y = point.y
+    local quad = self.quads[q]
+    
+    self.terrainInfo[x][y] = quad.id
+    self.sb:set(self.quadInfo[x][y], quad.quad, x * self.grain, y * self.grain)
 end
 
 function World:populate()
+    local zed = love.math.random()
+
     for i=0,self.size.x do
         self.terrainInfo[i] = {}
         self.quadInfo[i] = {}
         for j=0,self.size.y do
-            local l = perlin:noise((i+1)/10, (j+1)/10, 0.3)
-            local x = i * self.grain
-            local y = j * self.grain
-            if l >= -1 and l < -0.3 then
-                self.terrainInfo[i][j] = 0
-                self.quadInfo[i][j] = self.sb:add(self.quads["water"], x, y)
-            elseif l >= -0.3 and l < 0 then
-                self.terrainInfo[i][j] = 1
-                self.quadInfo[i][j] = self.sb:add(self.quads["grass"], x, y)
-            elseif l >= 0 and l < 0.5 then
-                self.terrainInfo[i][j] = 2
-                self.quadInfo[i][j] = self.sb:add(self.quads["forest"], x, y)
-            elseif l >= 0.5 then
-                self.terrainInfo[i][j] = 3
-                self.quadInfo[i][j] = self.sb:add(self.quads["mountain"], x, y)
+            local l = love.math.noise((i+1)/30, (j+1)/30, zed)
+            if l >= 0 and l < 0.5 then
+                self:addQuad(Vector(i, j), "water")
+            elseif l >= 0.5 and l < 0.7 then
+                self:addQuad(Vector(i, j), "grass")
+            elseif l >= 0.7 then
+                self:addQuad(Vector(i, j), "mountain")
             end
+        end
+    end
+
+    self:populateForest()
+end
+
+function World:populateForest()
+    local amount = love.math.random(10,18)
+    local currentAmount = 0
+
+    while currentAmount < amount do
+        local randomPoint = Vector(love.math.random(0, self.size.x), love.math.random(0, self.size.y))
+
+        if self.terrainInfo[randomPoint.x][randomPoint.y] == self.terrainIds["grass"] then
+            self:setQuad(randomPoint, "forest")
+
+            local forestSize = love.math.random(120,360)
+            for i=0,forestSize do
+                local flag = true
+                while flag do
+                    local decider = love.math.random(1,4)
+
+                    if decider == 1 then randomPoint.x = randomPoint.x + 1
+                    elseif decider == 2 then randomPoint.x = randomPoint.x - 1
+                    elseif decider == 3 then randomPoint.y = randomPoint.y - 1
+                    elseif decider == 4 then randomPoint.y = randomPoint.y + 1
+                    end
+
+                    randomPoint = self:clampToBounds(randomPoint:unpack())
+
+                    if self.terrainInfo[randomPoint.x][randomPoint.y] == self.terrainIds["grass"] then flag = false end
+                end
+
+                self:setQuad(randomPoint, "forest")
+            end
+
+            currentAmount = currentAmount + 1
         end
     end
 end
@@ -65,12 +112,14 @@ end
 
 function World:update(dt)
     local mx, my = cameraManager:getCamera():mousePosition()
-
-    local cx = math:clamp(0, (math.floor(mx/self.grain) ), self.size.x)
-    local cy = math:clamp(0, (math.floor(my/self.grain) ), self.size.y)
+    local clamped = self:clampToBounds(math.floor(mx/self.grain), math.floor(my/self.grain))
 
     Debug:print("Mouse world: ["..mx..", "..my.."]")
-    Debug:print("Hovering tile: "..self.terrainInfo[cx][cy].."["..cx..", "..cy.."]")
+    Debug:print("Hovering tile: "..self.terrainInfo[clamped.x][clamped.y].."["..clamped.x..", "..clamped.y.."]")
+end
+
+function World:clampToBounds(x, y)
+    return Vector(math:clamp(0, x, self.size.x), math:clamp(0, y, self.size.y))
 end
 
 function World:getResourcesInRadius(resource, x, y, radius)
@@ -81,10 +130,9 @@ function World:getResourcesInRadius(resource, x, y, radius)
 
     for i=x-radius,x+radius do
         for n=y-radius,y+radius do
-            ic = math:clamp(0, i, self.size.x)
-            nc = math:clamp(0, n, self.size.y)
+            local clamped = self:clampToBounds(i, n)
 
-            if self.terrainInfo[ic][nc] == resource then table.insert(result, {ic,nc}) end
+            if self.terrainInfo[clamped.x][clamped.y] == resource then table.insert(result, {clamped:unpack()}) end
         end
     end
 
@@ -96,10 +144,7 @@ function World:removeRandomResourceInRadius(resource, x, y, radius)
 
     if #res > 0 then
         target = res[math.random(#res)]
-        tx = target[1]
-        ty = target[2]
-        self.terrainInfo[tx][ty] = 1
-        self.sb:set(self.quadInfo[tx][ty], self.quads["grass"], tx * self.grain, ty * self.grain)
+        self:setQuad(Vector(target[1], target[2]), "grass")
         return true
     end
 
