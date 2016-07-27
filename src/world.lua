@@ -73,10 +73,35 @@ function World:update(dt)
     Debug:print("Hovering tile: "..self.terrainInfo[cx][cy].."["..cx..", "..cy.."]")
 end
 
-function World:isResourceInRadius(resource, x, y, radius)
+function World:getResourcesInRadius(resource, x, y, radius)
+    x = math.floor(x/self.grain)
+    y = math.floor(y/self.grain)
+
+    result = {}
+
     for i=x-radius,x+radius do
-        for n=n-radius,n+radius do
-            ic = --clamp
+        for n=y-radius,y+radius do
+            ic = math:clamp(0, i, self.size.x)
+            nc = math:clamp(0, n, self.size.y)
+
+            if self.terrainInfo[ic][nc] == resource then table.insert(result, {ic,nc}) end
         end
     end
+
+    return result
+end
+
+function World:removeRandomResourceInRadius(resource, x, y, radius)
+    res = self:getResourcesInRadius(resource, x, y, radius)
+
+    if #res > 0 then
+        target = res[math.random(#res)]
+        tx = target[1]
+        ty = target[2]
+        self.terrainInfo[tx][ty] = 1
+        self.sb:set(self.quadInfo[tx][ty], self.quads["grass"], tx * self.grain, ty * self.grain)
+        return true
+    end
+
+    return false
 end

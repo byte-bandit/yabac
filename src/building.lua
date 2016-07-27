@@ -4,7 +4,9 @@ function Building:init()
 end
 
 function Building:draw()
+    if self.production.state == ProductionQueue.State.Unable then love.graphics.setColor(0, 0, 255, 255) end
     love.graphics.draw(self.gfx, self.x, self.y)
+    love.graphics.setColor(255, 255, 255, 255)
 end
 
 function Building:update(dt)
@@ -26,6 +28,8 @@ function Building:restartProduction()
     if self.env_inpact then
         if self.env_inpact.canExecute(self) then
             self.production.state = ProductionQueue.State.Halted
+        else
+            self.production.state = ProductionQueue.State.Unable
         end
     else
         self.production.state = ProductionQueue.State.Halted
