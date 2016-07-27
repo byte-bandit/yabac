@@ -11,7 +11,7 @@ end
 
 function Blueprint:create()
     local b = Class.clone(self.building)
-    b.production = Class.clone(self.building.production)
+    if self.building.production then b.production = Class.clone(self.building.production) end
     b.x = self.x
     b.y = self.y
     return b

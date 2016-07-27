@@ -33,8 +33,14 @@ function Hud:update(dt)
     for _,v in ipairs(BuildingTable) do
         if self.suit.ImageButton(v.gfx, {}, self.suit.layout:col(16,16)).hit then 
             if gameState:top() == STATE.BUILD then gameState:pop() end
-            gameState:push(STATE.BUILD)
-            gameState:top().blueprint = Blueprint(v)
+            if v.id == "road" then
+                gameState:push(STATE.ROAD)
+                gameState:top().origin = world:getWorldPosition()
+                gameState:top().preview = {}
+            else
+                gameState:push(STATE.BUILD)
+                gameState:top().blueprint = Blueprint(v)
+            end
         end
     end
 end

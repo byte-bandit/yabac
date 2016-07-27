@@ -13,3 +13,10 @@ ResourceTable["timber"] =
     tooltip = "Wooden planks, perfect for your everyday building necessities.",
     gfx = love.graphics.newImage("assets/gfx/r_timber.png")
 }
+
+ResourceTable["thalers"] =
+{
+    name = "Thalers",
+    tooltip = "The currency of your domain. Your stunning features are embossed.",
+    gfx = love.graphics.newImage("assets/gfx/r_thaler.png")
+}

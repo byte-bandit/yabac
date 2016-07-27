@@ -18,12 +18,14 @@ function World:init(tileset, grain, size, seed)
     self.terrainIds["grass"] = 1
     self.terrainIds["forest"] = 2
     self.terrainIds["mountain"] = 3
+    self.terrainIds["road"] = 4
 
     self.quads = {}
     self.quads["grass"] = {id = self.terrainIds["grass"], quad = love.graphics.newQuad(0, 0, self.grain, self.grain, tw, th)}
     self.quads["water"] = {id = self.terrainIds["water"], quad = love.graphics.newQuad(7 * self.grain, 0, self.grain, self.grain, tw, th)}
     self.quads["mountain"] = {id = self.terrainIds["mountain"], quad = love.graphics.newQuad(3 * self.grain, 0, self.grain, self.grain, tw, th)}
     self.quads["forest"] = {id = self.terrainIds["forest"], quad = love.graphics.newQuad(2 * self.grain, 0, self.grain, self.grain, tw, th)}
+    self.quads["road"] = {id = self.terrainIds["road"], quad = love.graphics.newQuad(5 * self.grain, 2 * self.grain, self.grain, self.grain, tw, th)}
 end
 
 function World:addQuad(point, q)
@@ -112,19 +114,27 @@ end
 
 function World:update(dt)
     local mx, my = cameraManager:getCamera():mousePosition()
-    local clamped = self:clampToBounds(math.floor(mx/self.grain), math.floor(my/self.grain))
+    local clamped = self:getWorldPosition()
 
     Debug:print("Mouse world: ["..mx..", "..my.."]")
     Debug:print("Hovering tile: "..self.terrainInfo[clamped.x][clamped.y].."["..clamped.x..", "..clamped.y.."]")
+end
+
+function World:getWorldPosition()
+    local mx, my = cameraManager:getCamera():mousePosition()
+    return self:clampToBounds(self:worldToMapCoordinates(Vector(mx, my)):unpack())
 end
 
 function World:clampToBounds(x, y)
     return Vector(math:clamp(0, x, self.size.x), math:clamp(0, y, self.size.y))
 end
 
+function World:worldToMapCoordinates(coords)
+    return Vector(math.floor(coords.x/self.grain), math.floor(coords.y/self.grain))
+end
+
 function World:getResourcesInRadius(resource, x, y, radius)
-    x = math.floor(x/self.grain)
-    y = math.floor(y/self.grain)
+    local x,y = self:worldToMapCoordinates(Vector(x, y)):unpack()
 
     result = {}
 
@@ -149,4 +159,9 @@ function World:removeRandomResourceInRadius(resource, x, y, radius)
     end
 
     return false
+end
+
+function World:createRoad(origin, target)
+    self:setQuad(origin, "road")
+    self:setQuad(target, "road")
 end

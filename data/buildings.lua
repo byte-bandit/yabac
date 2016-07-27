@@ -1,10 +1,17 @@
 BuildingTable = 
 {
     {
+        id = "road",
+        name = "Road",
+        tooltip = "Roads connect your buildings and production sites to a network. Also great for taking the ole horse for a ride.",
+        gfx = love.graphics.newImage("assets/gfx/road.png"),
+    },
+    {
         id = "house",
         name = "Settler's house",
         tooltip = "Built from crude materials, it offers almost no comfort. But people will be glad for a roof and a place to sleep.",
         gfx = love.graphics.newImage("assets/gfx/house.png"),
+        production = ProductionQueue({thalers=1}, nil, 2)
     },
     {
         id = "lumberjack",

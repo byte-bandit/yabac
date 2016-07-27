@@ -4,7 +4,7 @@ function Building:init()
 end
 
 function Building:draw()
-    if self.production.state == ProductionQueue.State.Unable then love.graphics.setColor(0, 0, 255, 255) end
+    if self.production and self.production.state == ProductionQueue.State.Unable then love.graphics.setColor(0, 0, 255, 255) end
     love.graphics.draw(self.gfx, self.x, self.y)
     love.graphics.setColor(255, 255, 255, 255)
 end
