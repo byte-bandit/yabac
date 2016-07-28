@@ -9,6 +9,7 @@ function Hud:draw()
     love.graphics.setColor(80, 80, 80, 255)
     love.graphics.rectangle("fill", 0, 0, self.wWidth, 32)
     love.graphics.rectangle("fill", self.wWidth - 128, 0, 128, self.wWidth)
+    love.graphics.rectangle("fill", 0, self.wHeight - 32, self.wWidth, 32)
     love.graphics.setColor(255, 255, 255, 255)
 
     self.suit.draw()
@@ -21,17 +22,23 @@ function Hud:draw()
             offset = offset + 1
         end
     end
+
+    if self.tooltip then love.graphics.print(self.tooltip, 8, self.wHeight - 24) end
 end
 
 function Hud:update(dt)
     self.wWidth = love.graphics.getWidth()
     self.wHeight = love.graphics.getHeight()
     self.qOrigin = Vector(self.wWidth - 96, 128)
+    self.tooltip = nil
 
     self.suit.layout:reset(self.qOrigin.x, self.qOrigin.y, 4, 4)
 
     for _,v in ipairs(BuildingTable) do
-        if self.suit.ImageButton(v.gfx, {}, self.suit.layout:col(16,16)).hit then 
+
+        local btn = self.suit.ImageButton(v.gfx, {}, self.suit.layout:col(16,16))
+
+        if btn.hit then 
             if gameState:top() == STATE.BUILD then gameState:pop() end
             if v.id == "road" then
                 gameState:push(STATE.ROAD)
@@ -40,5 +47,7 @@ function Hud:update(dt)
                 gameState:top().blueprint = Blueprint(v)
             end
         end
+
+        if btn.hovered then self.tooltip = v.tooltip end
     end
 end
