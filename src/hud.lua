@@ -3,13 +3,25 @@ Hud = Class {}
 function Hud:init()
     self.suit = require 'lib.suit'
     self:update()
+
+    self.hud_bg = love.graphics.newImage('assets/gfx/hud_bg.png')
+    self.hud_bg:setWrap("repeat", "repeat")
+
+    self.hud_quads = 
+    {
+        love.graphics.newQuad(0, 0, 4096, 32, 16, 16),
+        love.graphics.newQuad(0, 0, 256, 4096, 16, 16)
+    }
 end
 
 function Hud:draw()
-    love.graphics.setColor(80, 80, 80, 255)
-    love.graphics.rectangle("fill", 0, 0, self.wWidth, 32)
-    love.graphics.rectangle("fill", self.wWidth - 128, 0, 128, self.wWidth)
-    love.graphics.rectangle("fill", 0, self.wHeight - 32, self.wWidth, 32)
+
+    love.graphics.draw(self.hud_bg, self.hud_quads[1], 0, 0)
+    love.graphics.draw(self.hud_bg, self.hud_quads[1], 0, self.wHeight - 32)
+    love.graphics.draw(self.hud_bg, self.hud_quads[2], self.wWidth - 128, 0)
+
+    love.graphics.setColor(0, 0, 0, 255)
+    love.graphics.rectangle("fill", self.wWidth - 128 + 16, 32 + 16, 128 - 32, self.wHeight - 96, 8)
     love.graphics.setColor(255, 255, 255, 255)
 
     self.suit.draw()
