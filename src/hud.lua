@@ -35,8 +35,6 @@ function Hud:update(dt)
             if gameState:top() == STATE.BUILD then gameState:pop() end
             if v.id == "road" then
                 gameState:push(STATE.ROAD)
-                gameState:top().origin = world:getWorldPosition()
-                gameState:top().preview = {}
             else
                 gameState:push(STATE.BUILD)
                 gameState:top().blueprint = Blueprint(v)

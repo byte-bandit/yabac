@@ -161,7 +161,8 @@ function World:removeRandomResourceInRadius(resource, x, y, radius)
     return false
 end
 
-function World:createRoad(origin, target)
-    self:setQuad(origin, "road")
-    self:setQuad(target, "road")
+function World:createRoad(vectors)
+    for k,v in pairs(vectors) do
+        self:setQuad(v, "road")
+    end
 end
