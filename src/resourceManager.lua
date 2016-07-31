@@ -3,9 +3,9 @@ ResourceManager = Class{}
 function ResourceManager:init()
     self.resources = {}
 
-    for k,v in pairs(ResourceTable) do
-        self.resources[k] = 0
-    end
+    self.resources["thalers"] = 50
+    self.resources["wood"] = 0
+    self.resources["timber"] = 10
 end
 
 function ResourceManager:add(res)
@@ -19,16 +19,27 @@ end
 function ResourceManager:tryRemove(res)
     res = res or {}
 
-    success = true
-    for k,v in pairs(res) do
-        if self.resources[k] < v then success = false end
-    end
-
-    if success then
+    if self:hasResource(res) then
         for k,v in pairs(res) do
             self.resources[k] = self.resources[k] - v
         end
+
+        return true
+    else
+        return false
+    end
+end
+
+function ResourceManager:hasResource(res)
+    res = res or {}
+
+    for k,v in pairs(res) do
+        if self.resources[k] < v then return false end
     end
 
-    return success
+    return true
+end
+
+function ResourceManager:payCost(building)
+    if not building.cost then return true else return self:tryRemove(building.cost) end
 end

@@ -10,11 +10,13 @@ function Blueprint:init(building)
 end
 
 function Blueprint:create()
-    local b = Class.clone(self.building)
-    if self.building.production then b.production = Class.clone(self.building.production) end
-    b.x = self.x
-    b.y = self.y
-    return b
+    if resourceManager:payCost(self.building) then
+        local b = Class.clone(self.building)
+        if self.building.production then b.production = Class.clone(self.building.production) end
+        b.x = self.x
+        b.y = self.y
+        return b
+    end
 end
 
 function Blueprint:update(dt)
@@ -31,8 +33,12 @@ end
 
 function Blueprint:draw()
     cameraManager:attach()
-    if self.canBuild then love.graphics.setColor(0, 255, 0, 127) else love.graphics.setColor(255, 0, 0, 127) end
+    if self.canBuild and self:canAfford() then love.graphics.setColor(0, 255, 0, 127) else love.graphics.setColor(255, 0, 0, 127) end
     love.graphics.draw(self.building.gfx, self.x, self.y)
     love.graphics.setColor(255, 255, 255, 255)
     cameraManager:detach()
+end
+
+function Blueprint:canAfford()
+    if not self.building.cost then return true else return resourceManager:hasResource(self.building.cost) end
 end

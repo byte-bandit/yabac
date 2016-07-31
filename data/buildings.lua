@@ -11,7 +11,8 @@ BuildingTable =
         name = "Settler's house",
         tooltip = "Built from crude materials, it offers almost no comfort. But people will be glad for a roof and a place to sleep.",
         gfx = love.graphics.newImage("assets/gfx/house.png"),
-        production = ProductionQueue({thalers=1}, nil, 2)
+        production = ProductionQueue({thalers=1}, nil, 2),
+        cost = {timber=3}
     },
     {
         id = "lumberjack",

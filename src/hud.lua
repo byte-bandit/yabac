@@ -42,6 +42,26 @@ function Hud:draw()
     end
 
     if self.tooltip then love.graphics.print(self.tooltip, 8, self.wHeight - 24) end
+
+    local state = gameState:top()
+    if state.name == "build" and state.blueprint and state.blueprint.building.cost then
+        for k,v in pairs(state.blueprint.building.cost) do
+            if resourceManager.resources[k] >= v then love.graphics.setColor(0, 255, 0, 255) else love.graphics.setColor(255, 0, 0, 255) end
+            local x = 0
+
+            if k == "thalers" then
+                x = 32
+            elseif k == "wood" then
+                x = 32 + (1 * 128 + 8)
+            elseif k == "timber" then
+                x = 32 + (2 * 128 + 8)
+            end
+
+            love.graphics.print(v, x, 28)
+        end
+
+        love.graphics.setColor(255, 255, 255, 255)
+    end
 end
 
 function Hud:update(dt)
