@@ -23,10 +23,11 @@ function Hud:draw()
 
     love.graphics.draw(self.hud_bg, self.hud_quads[1], 0, 0)
     love.graphics.draw(self.hud_bg, self.hud_quads[1], 0, self.wHeight - 32)
-    love.graphics.draw(self.hud_bg, self.hud_quads[2], self.wWidth - 128, 0)
+    love.graphics.draw(self.hud_bg, self.hud_quads[2], self.wWidth - 256, 0)
 
     love.graphics.setColor(0, 0, 0, 255)
-    love.graphics.rectangle("fill", self.wWidth - 128 + 16, 32 + 16, 128 - 32, self.wHeight - 96, 8)
+    love.graphics.rectangle("fill", self.wWidth - 256 + 16, 32, 256 - 32, self.wHeight - 64, 8)
+    love.graphics.rectangle("fill", 4, self.wHeight - 28, self.wWidth - 8, 24, 4)
     love.graphics.setColor(255, 255, 255, 255)
 
     self.suit.draw()
@@ -67,7 +68,7 @@ end
 function Hud:update(dt)
     self.wWidth = love.graphics.getWidth()
     self.wHeight = love.graphics.getHeight()
-    self.qOrigin = Vector(self.wWidth - 96, 128)
+    self.qOrigin = Vector(self.wWidth - 224, 128)
     self.tooltip = nil
 
     self.suit.layout:reset(self.qOrigin.x, self.qOrigin.y, 4, 4)

@@ -21,6 +21,7 @@ require 'data.states'
 --- Callback function used for initial loading.
 function love.load()
     world = World(love.graphics.newImage('assets/gfx/tileset.png'), 16, Vector(128, 128))
+    love.graphics.setFont(love.graphics.newFont('assets/font/Mops.ttf', 16 ))
     hud = Hud()
     cameraManager = CameraManager()
     gameState = Stack()

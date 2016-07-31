@@ -27,6 +27,7 @@ end
 function Building:restartProduction()
     if self.env_inpact then
         if self.env_inpact.canExecute(self) then
+            if self.env_inpact.execute then self.env_inpact.execute(self) end
             self.production.state = ProductionQueue.State.Halted
         else
             self.production.state = ProductionQueue.State.Unable

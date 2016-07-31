@@ -149,6 +149,19 @@ function World:getResourcesInRadius(resource, x, y, radius)
     return result
 end
 
+function World:addRandomResourceInRadius(resource, x, y, radius)
+
+    res = self:getResourcesInRadius(self.terrainIds["grass"], x, y, radius)
+
+    if #res > 0 then
+        target = res[math.random(#res)]
+        self:setQuad(Vector(target[1], target[2]), "forest")
+        return true
+    end
+
+    return false
+end
+
 function World:removeRandomResourceInRadius(resource, x, y, radius)
     res = self:getResourcesInRadius(resource, x, y, radius)
 
