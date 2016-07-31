@@ -32,12 +32,17 @@ function CameraManager:update(dt)
   if love.keyboard.isDown('left') then
     self.camera:move(-self.scrollspeed, 0)
   end
+
+  self.camera.x = math:clamp(0, self.camera.x, world.size.x * world.grain)
+  self.camera.y = math:clamp(0, self.camera.y, world.size.y * world.grain)
+
+  Debug:print("Camera position: "..self.camera.x..", "..self.camera.y)
 end
 
 function CameraManager:handleMouseWheel(x, y)
   local x = x or 0
   local y = y or 0
-  local s = math:clamp(0.5, self.camera.scale + 0.1 * x, 2)
+  local s = math:clamp(0.5, self.camera.scale + x, 1)
 
   self.camera:zoomTo(s)
   self.scrollspeed = math:round(8 / s, 1)

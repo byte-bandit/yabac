@@ -1,7 +1,12 @@
 Hud = Class {}
 
+
 function Hud:init()
     self.suit = require 'lib.suit'
+    self.resourceGrid = {}
+    self.resourceGrid[0] = "thalers"
+    self.resourceGrid[1] = "wood"
+    self.resourceGrid[2] = "timber"
     self:update()
 
     self.hud_bg = love.graphics.newImage('assets/gfx/hud_bg.png')
@@ -27,12 +32,13 @@ function Hud:draw()
     self.suit.draw()
 
     offset = 0
-    for k,v in pairs(resourceManager.resources) do
-        if v > 0 then
-            love.graphics.draw(ResourceTable[k].gfx, 8 + (48 * offset), 8)
-            love.graphics.print(v, 32 + (48 * offset), 10)
-            offset = offset + 1
-        end
+    for k,v in pairs(self.resourceGrid) do
+        love.graphics.setColor(0, 0, 0, 255)
+        love.graphics.rectangle("fill", 4 + (offset * 128+8), 4, 96, 24, 4)
+        love.graphics.setColor(255, 255, 255, 255)
+        love.graphics.draw(ResourceTable[v].gfx, 8 + (offset * 128+8), 8)
+        love.graphics.print(resourceManager.resources[v], 32 + (offset * 128+8), 10)
+        offset = offset + 1
     end
 
     if self.tooltip then love.graphics.print(self.tooltip, 8, self.wHeight - 24) end
