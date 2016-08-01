@@ -11,11 +11,14 @@ end
 
 function Blueprint:create()
     if resourceManager:payCost(self.building) then
+        love.audio.play(sndClick)
         local b = Class.clone(self.building)
         if self.building.production then b.production = Class.clone(self.building.production) end
         b.x = self.x
         b.y = self.y
         return b
+    else
+        love.audio.play(sndDenied)
     end
 end
 

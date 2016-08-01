@@ -6,10 +6,13 @@ STATE.ROAD = State("road")
 
 STATE.BUILD.click = function(self, x, y, button)
     if button == 2 then 
+        love.audio.play(sndClick2)
         gameState:pop()
     elseif button == 1 then
         if self.blueprint.canBuild then
             buildingManager:addBuilding(self.blueprint:create())
+        else
+            love.audio.play(sndDenied)
         end
     end
 end
@@ -25,9 +28,11 @@ end
 STATE.ROAD.preview = {}
 
 STATE.ROAD.click = function(self, x, y, button)
-    if button == 2 then 
-        gameState:pop()
+    if button == 2 then
+        love.audio.play(sndClick2)
+        if self.origin then self.origin = nil else gameState:pop() end
     elseif button == 1 then
+        love.audio.play(sndClick)
         if not self.origin 
             then self.origin = world:getWorldPosition()
         else

@@ -8,6 +8,7 @@ require 'src.buildingManager'
 require 'src.camera'
 require 'src.debug'
 require 'src.hud'
+require 'src.music'
 require 'src.productionQueue'
 require 'src.resourceManager'
 require 'src.state'
@@ -21,7 +22,12 @@ require 'data.states'
 --- Callback function used for initial loading.
 function love.load()
     world = World(love.graphics.newImage('assets/gfx/tileset.png'), 16, Vector(128, 128))
-    love.graphics.setFont(love.graphics.newFont('assets/font/Mops.ttf', 16 ))
+    fntMops = love.graphics.newFont('assets/font/Mops.ttf', 16 )
+    fntMopsLarge = love.graphics.newFont('assets/font/Mops.ttf', 32 )
+    sndClick = love.audio.newSource('assets/sfx/click.wav', "static")
+    sndClick2 = love.audio.newSource('assets/sfx/click2.wav', "static")
+    sndDenied = love.audio.newSource('assets/sfx/denied.wav', "static")
+    love.graphics.setFont(fntMops)
     hud = Hud()
     cameraManager = CameraManager()
     gameState = Stack()
@@ -31,6 +37,8 @@ function love.load()
 
     buildingManager = BuildingManager()
     resourceManager = ResourceManager()
+
+    music = Music()
 end
 
 --- Callback function used for every draw frame.
@@ -55,6 +63,7 @@ function love.update(dt)
     cameraManager:update(dt)
     gameState:top():update(dt)
     hud:update(dt)
+    music:update(dt)
 
     Debug:print(
         "FPS: "..love.timer.getFPS(), 
