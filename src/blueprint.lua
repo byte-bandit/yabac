@@ -32,6 +32,12 @@ function Blueprint:update(dt)
     self.y = math:clamp(0, self.y, world.size.y * 16)
 
     if world.terrainInfo[self.x/16][self.y/16] == 1 then self.canBuild = true else self.canBuild = false end
+    for k,v in pairs(buildingManager.buildings) do
+        if v.x == self.x and v.y == self.y then 
+            self.canBuild = false
+            break
+        end
+    end
 end
 
 function Blueprint:draw()
