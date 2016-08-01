@@ -17,6 +17,10 @@ function Hud:init()
     self.buttongfx[2] = love.graphics.newImage('assets/gfx/btn_click.png')
 
     self.btnDemolish = love.graphics.newImage('assets/gfx/demolish.png')
+    self.imgProductionIn = love.graphics.newImage('assets/gfx/productionIn.png')
+    self.imgProductionOut = love.graphics.newImage('assets/gfx/productionOut.png')
+    self.imgProductionTime = love.graphics.newImage('assets/gfx/clock.png')
+    self.imgGreenArrow = love.graphics.newImage('assets/gfx/arrow_green.png')
 
     self.volumeSlider = {value = 1, min = 0, max = 1, step = 0.1}
 
@@ -80,6 +84,37 @@ function Hud:draw()
         end
 
         love.graphics.setColor(255, 255, 255, 255)
+    elseif state and state.name == "inspect" then
+        love.graphics.setFont(fntMopsLarge)
+        love.graphics.printf(state.selection.name, self.wWidth - 256, 300, 256, "center")
+        --love.graphics.draw(state.selection.gfx, self.wWidth - 156, 340, 0, 4)
+        love.graphics.setFont(fntMops)
+
+        --love.graphics.draw(self.imgProductionIn, self.wWidth - 222, 420)
+        --love.graphics.draw(self.imgProductionOut, self.wWidth - 158, 420)
+        --love.graphics.draw(self.imgProductionTime, self.wWidth - 94, 420)
+
+        local queue = state.selection.production
+        if queue then
+            -- this only works for single item production queues right now
+            love.graphics.draw(self.imgGreenArrow, self.wWidth - 128, 360)
+            if queue.input then
+                for k,v in pairs(queue.input) do
+                    love.graphics.draw(ResourceTable[k].gfx, self.wWidth - 192, 360)
+                end
+            end
+
+            if queue.output then
+                for k,v in pairs(queue.output) do
+                    love.graphics.draw(ResourceTable[k].gfx, self.wWidth - 64, 360)
+                end
+            end
+
+            if queue.duration then
+                love.graphics.draw(self.imgProductionTime, self.wWidth - 128, 392)
+                love.graphics.print(queue.duration, self.wWidth - 96, 390)
+            end
+        end
     end
 end
 
@@ -103,7 +138,7 @@ function Hud:update(dt)
 
         if state.hit then 
             love.audio.play(sndClick)
-            if gameState:top() == STATE.BUILD or gameState:top() == STATE.ROAD then gameState:pop() end
+            gameState:pop()
             if v.id == "road" then
                 gameState:push(STATE.ROAD)
             else

@@ -22,10 +22,10 @@ end
 
 function BuildingManager:queryBuilding(pos)
     for k,v in pairs(self.buildings) do
-        if v.x == pos.x and v.y == pos.y then return true end
+        if v.x == pos.x and v.y == pos.y then return v end
     end
 
-    return false
+    return nil
 end
 
 function BuildingManager:removeBuildingsWithin(from, to)

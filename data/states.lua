@@ -1,8 +1,21 @@
 STATE = {}
 
+STATE.DEFAULT = State("default")
 STATE.BUILD = State("build")
 STATE.ROAD = State("road")
 STATE.DEMOLISH = State("demolish")
+STATE.INSPECT = State("inspect")
+
+STATE.DEFAULT.click = function(self, x, y, button)
+    local b = buildingManager:queryBuilding(world:getWorldPosition() * world.grain)
+
+    if b then 
+        love.audio.play(sndClick)
+        gameState:pop()
+        gameState:push(STATE.INSPECT)
+        STATE.INSPECT.selection = b
+    end
+end
 
 STATE.BUILD.click = function(self, x, y, button)
     if button == 2 then 
@@ -143,5 +156,15 @@ STATE.DEMOLISH.update = function(self, dt)
             love.audio.play(sndDemolish)
             self.area = {}
         end
+    end
+end
+
+STATE.INSPECT.click = function(self, x, y, button)
+    if button == 2 then
+        love.audio.play(sndClick2)
+        self.selection = nil
+        gameState:pop()
+    else
+        STATE.DEFAULT:click(x, y, button)
     end
 end

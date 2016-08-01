@@ -9,11 +9,11 @@ function Stack:getSize()
 end
 
 function Stack:top()
-	if #self.items > 0 then return self.items[#self.items] else return nil end
+	return self.items[#self.items]
 end
 
 function Stack:pop()
-	return table.remove(self.items)
+	if self:top() ~= STATE.DEFAULT then return table.remove(self.items) end
 end
 
 function Stack:push(item)
