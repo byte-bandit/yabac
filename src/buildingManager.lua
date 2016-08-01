@@ -19,3 +19,11 @@ function BuildingManager:update(dt)
         v:update(dt)
     end
 end
+
+function BuildingManager:queryBuilding(pos)
+    for k,v in pairs(self.buildings) do
+        if v.x == pos.x and v.y == pos.y then return true end
+    end
+
+    return false
+end

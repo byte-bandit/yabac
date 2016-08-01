@@ -32,19 +32,28 @@ STATE.ROAD.click = function(self, x, y, button)
         love.audio.play(sndClick2)
         if self.origin then self.origin = nil else gameState:pop() end
     elseif button == 1 then
-        love.audio.play(sndClick)
-        if not self.origin 
-            then self.origin = world:getWorldPosition()
+        if not self.origin then
+            if self.canBuildRoad then
+                love.audio.play(sndClick)
+                self.origin = world:getWorldPosition()
+            else
+                love.audio.play(sndDenied)
+            end
         else
-            world:createRoad(self.preview)
-            self.preview = {}
-            self.origin = nil
+            if self.canBuildRoad then
+                world:createRoad(self.preview)
+                love.audio.play(sndClick)
+                self.preview = {}
+                self.origin = nil
+            else
+                love.audio.play(sndDenied)
+            end
         end
     end
 end
 
 STATE.ROAD.draw = function(self)
-    love.graphics.setColor(255, 255, 255, 127)
+    if self.canBuildRoad then love.graphics.setColor(255, 255, 255, 127) else love.graphics.setColor(255, 0, 0, 127) end
     if self.origin then
         for k,v in pairs(self.preview) do
             cameraManager:attach()
@@ -81,5 +90,14 @@ STATE.ROAD.update = function(self, dt)
                 table.insert(self.preview, Vector(self.origin.x, self.origin.y + i * fac))
             end
         end
+
+        self.canBuildRoad = true
+        for k,v in pairs(self.preview) do
+            if not world:tileQuery(v, {"grass", "road"}) or buildingManager:queryBuilding(v * world.grain) then self.canBuildRoad = false end
+        end
+
+    else
+        local pos = world:getWorldPosition()
+        self.canBuildRoad = world:tileQuery(pos, {"grass", "road"}) and not buildingManager:queryBuilding(pos * world.grain)
     end
 end

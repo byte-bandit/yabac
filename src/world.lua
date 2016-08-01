@@ -179,3 +179,11 @@ function World:createRoad(vectors)
         self:setQuad(v, "road")
     end
 end
+
+function World:tileQuery(position, resource)
+    for i,v in ipairs(resource) do
+        if self.terrainInfo[position.x][position.y] == self.terrainIds[v] then return true end 
+    end
+
+    return false
+end
