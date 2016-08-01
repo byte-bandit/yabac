@@ -27,3 +27,14 @@ function BuildingManager:queryBuilding(pos)
 
     return false
 end
+
+function BuildingManager:removeBuildingsWithin(from, to)
+    target = Vector(math.min(from.x, to.x), math.min(from.y, to.y)) * world.grain
+    dest = Vector(math.max(from.x, to.x), math.max(from.y, to.y)) * world.grain
+
+    for k,v in pairs(self.buildings) do
+        if v.x >= target.x and v.x <= dest.x and v.y >= target.y and v.y <= dest.y then
+            self.buildings[k] = nil
+        end
+    end
+end

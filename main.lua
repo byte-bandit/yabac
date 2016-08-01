@@ -27,6 +27,7 @@ function love.load()
     sndClick = love.audio.newSource('assets/sfx/click.wav', "static")
     sndClick2 = love.audio.newSource('assets/sfx/click2.wav', "static")
     sndDenied = love.audio.newSource('assets/sfx/denied.wav', "static")
+    sndDemolish = love.audio.newSource('assets/sfx/demolish.wav', "static")
     love.graphics.setFont(fntMops)
     hud = Hud()
     cameraManager = CameraManager()
@@ -48,7 +49,7 @@ function love.draw()
     buildingManager:draw()
     cameraManager:detach()
 
-    gameState:top():draw()
+    if gameState:top() then gameState:top():draw() end
 
     hud:draw()
 
@@ -61,13 +62,12 @@ function love.update(dt)
     world:update(dt)
     buildingManager:update(dt)
     cameraManager:update(dt)
-    gameState:top():update(dt)
+    if gameState:top() then gameState:top():update() end
     hud:update(dt)
     music:update(dt)
 
-    Debug:print(
-        "FPS: "..love.timer.getFPS(), 
-        "State: "..gameState:top().name)
+    Debug:print("FPS: "..love.timer.getFPS())
+    if gameState:top() then Debug:print("State: "..gameState:top().name) end
 end
 
 --- Callback function used for key pressed events.
@@ -89,5 +89,5 @@ end
 -- @param button The registered mouse button
 -- @param istouch Indicating whether or not the registered event was caused by a touch
 function love.mousepressed(x, y, button, istouch)
-    gameState:top():click(x, y, button)
+    if gameState:top() then gameState:top():click(x, y, button) end
 end

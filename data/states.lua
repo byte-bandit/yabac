@@ -1,14 +1,14 @@
 STATE = {}
 
-STATE.DEFAULT = State("default")
 STATE.BUILD = State("build")
 STATE.ROAD = State("road")
+STATE.DEMOLISH = State("demolish")
 
 STATE.BUILD.click = function(self, x, y, button)
     if button == 2 then 
         love.audio.play(sndClick2)
         gameState:pop()
-    elseif button == 1 then
+    elseif button == 1 and hud:isCursorOutsideHud() then
         if self.blueprint.canBuild then
             buildingManager:addBuilding(self.blueprint:create())
         else
@@ -31,7 +31,7 @@ STATE.ROAD.click = function(self, x, y, button)
     if button == 2 then
         love.audio.play(sndClick2)
         if self.origin then self.origin = nil else gameState:pop() end
-    elseif button == 1 then
+    elseif button == 1 and hud:isCursorOutsideHud() then
         if not self.origin then
             if self.canBuildRoad then
                 love.audio.play(sndClick)
@@ -99,5 +99,49 @@ STATE.ROAD.update = function(self, dt)
     else
         local pos = world:getWorldPosition()
         self.canBuildRoad = world:tileQuery(pos, {"grass", "road"}) and not buildingManager:queryBuilding(pos * world.grain)
+    end
+end
+
+STATE.DEMOLISH.area = {}
+
+STATE.DEMOLISH.click = function(self, x, y, button)
+    if not love.mouse.isDown(1) and button == 2 then
+        love.audio.play(sndClick2)
+        self.area = {}
+        gameState:pop()
+    end
+end
+
+STATE.DEMOLISH.draw = function(self)
+    if #self.area > 0 then
+        local x = self.area[1].x * world.grain
+        local y = self.area[1].y * world.grain
+        local w = ((self.area[2].x * world.grain) - x) + world.grain
+        local h = ((self.area[2].y * world.grain) - y) + world.grain
+
+        cameraManager:attach()
+
+        love.graphics.setColor(255, 0, 0, 127)
+        love.graphics.rectangle("fill", x, y, w, h)
+        love.graphics.setColor(255, 255, 255, 255)
+
+        cameraManager:detach()
+    end
+end
+
+STATE.DEMOLISH.update = function(self, dt)
+    if love.mouse.isDown(1) then
+        if #self.area < 1 then
+            self.area[1] = world:getWorldPosition()
+            love.audio.play(sndClick)
+        end
+        self.area[2] = world:getWorldPosition()
+    else
+        if #self.area > 0 then
+            buildingManager:removeBuildingsWithin(self.area[1], self.area[2]) 
+            world:removeRoadsWithin(self.area[1], self.area[2])
+            love.audio.play(sndDemolish)
+            self.area = {}
+        end
     end
 end

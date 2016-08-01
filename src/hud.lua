@@ -16,6 +16,8 @@ function Hud:init()
     self.buttongfx[1] = love.graphics.newImage('assets/gfx/btn_hover.png')
     self.buttongfx[2] = love.graphics.newImage('assets/gfx/btn_click.png')
 
+    self.btnDemolish = love.graphics.newImage('assets/gfx/demolish.png')
+
     self.volumeSlider = {value = 1, min = 0, max = 1, step = 0.1}
 
     self.hud_quads = 
@@ -61,7 +63,7 @@ function Hud:draw()
     if self.tooltip then love.graphics.print(self.tooltip, 8, self.wHeight - 26) end
 
     local state = gameState:top()
-    if state.name == "build" and state.blueprint and state.blueprint.building.cost then
+    if state and state.name == "build" and state.blueprint and state.blueprint.building.cost then
         for k,v in pairs(state.blueprint.building.cost) do
             if resourceManager.resources[k] >= v then love.graphics.setColor(0, 255, 0, 255) else love.graphics.setColor(255, 0, 0, 255) end
             local x = 0
@@ -120,9 +122,26 @@ function Hud:update(dt)
         end
     end
 
+    state = self.suit.ImageButton(self.buttongfx[0], {hovered=self.buttongfx[1], active=self.buttongfx[2], id = "demolish"}, x + dx, y +dy)
+    table.insert(self.buildingListHelpTable, {self.btnDemolish, x+dx, y+dy})
+
+    if state.hit then
+        love.audio.play(sndClick)
+        gameState:pop()
+        gameState:push(STATE.DEMOLISH)
+    end
+
+    if state.hovered then self.tooltip = "Demolish constructed buildings and roads." end
+
     if self.suit.Slider(self.volumeSlider, self.wWidth - 224, self.wHeight - 64, 192, 12).changed then
         for k,v in pairs(music.tracks) do
             v:setVolume(self.volumeSlider.value)
         end
     end    
+end
+
+function Hud:isCursorOutsideHud()
+    local x, y = love.mouse.getPosition()
+
+    return x > 0 and x < self.wWidth - 256 and y > 32 and y < self.wHeight - 32
 end

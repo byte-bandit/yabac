@@ -9,7 +9,7 @@ function Stack:getSize()
 end
 
 function Stack:top()
-	return self.items[#self.items]
+	if #self.items > 0 then return self.items[#self.items] else return nil end
 end
 
 function Stack:pop()

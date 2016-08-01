@@ -187,3 +187,17 @@ function World:tileQuery(position, resource)
 
     return false
 end
+
+function World:removeRoadsWithin(from, to)
+    target = Vector(math.min(from.x, to.x), math.min(from.y, to.y))
+    dest = Vector(math.max(from.x, to.x), math.max(from.y, to.y))
+
+    target = self:clampToBounds(target:unpack())
+    dest = self:clampToBounds(dest:unpack())
+
+    for i=target.x,dest.x do
+        for j=target.y,dest.y do
+            if self.terrainInfo[i][j] == self.terrainIds["road"] then self:setQuad(Vector(i, j), "grass") end
+        end
+    end
+end
