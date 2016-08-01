@@ -37,8 +37,8 @@ function CameraManager:update(dt)
     self.camera:move(-self.scrollspeed, 0)
   end
 
-  self.camera.x = math:clamp(0 + w / 2, self.camera.x, world.size.x * world.grain - w / 2 + 240)
-  self.camera.y = math:clamp(0 + h / 2 - 32, self.camera.y, world.size.y * world.grain - h / 2 + 32)
+  self.camera.x = math:clamp(0 + (w / 2) / self.camera.scale, self.camera.x, world.size.x * world.grain - ((w / 2) / self.camera.scale) + 240 / self.camera.scale)
+  self.camera.y = math:clamp(0 + (h / 2) / self.camera.scale - 32 / self.camera.scale, self.camera.y, world.size.y * world.grain - (h / 2) / self.camera.scale + 32 / self.camera.scale)
 
   Debug:print("Camera position: "..self.camera.x..", "..self.camera.y)
 end

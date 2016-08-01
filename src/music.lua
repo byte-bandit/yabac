@@ -13,7 +13,7 @@ function Music:update(dt)
     if self.tracks[self.currentTrack]:isStopped() then
         self.tracks[self.currentTrack]:rewind()
         self.currentTrack = self.currentTrack + 1
-        if self.currentTrack == 1 then self.currentTrack = 0 end
+        if self.currentTrack == 2 then self.currentTrack = 0 end
         love.audio.play(self.tracks[self.currentTrack])
     end
 
