@@ -3,9 +3,9 @@ ResourceManager = Class{}
 function ResourceManager:init()
     self.resources = {}
 
-    self.resources["thalers"] = 50
+    self.resources["thalers"] = 200
     self.resources["wood"] = 0
-    self.resources["timber"] = 10
+    self.resources["timber"] = 30
 end
 
 function ResourceManager:add(res)
