@@ -6,6 +6,9 @@ function Music:init()
     self.tracks[1] = love.audio.newSource("assets/music/fields.ogg")
     self.currentTrack = 0
 
+    self.tracks[0]:setVolume(0.25)
+    self.tracks[1]:setVolume(0.25)
+
     love.audio.play(self.tracks[0])
 end
 

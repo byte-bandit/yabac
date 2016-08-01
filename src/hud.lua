@@ -22,7 +22,7 @@ function Hud:init()
     self.imgProductionTime = love.graphics.newImage('assets/gfx/clock.png')
     self.imgGreenArrow = love.graphics.newImage('assets/gfx/arrow_green.png')
 
-    self.volumeSlider = {value = 1, min = 0, max = 1, step = 0.1}
+    self.volumeSlider = {value = 0.25, min = 0, max = 1, step = 0.1}
 
     self.hud_quads = 
     {

@@ -2,7 +2,7 @@ Debug = {}
 Debug.values = {}
 
 function Debug:draw()
-    love.graphics.print(table.concat(Debug.values, "\n"), 16, 48)
+    --love.graphics.print(table.concat(Debug.values, "\n"), 16, 48)
     Debug.values = {}
 end
 
