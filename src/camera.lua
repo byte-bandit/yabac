@@ -17,6 +17,10 @@ function CameraManager:detach()
 end
 
 function CameraManager:update(dt)
+
+  local w = love.graphics.getWidth()
+  local h = love.graphics.getHeight()
+
   if love.keyboard.isDown('up') then
     self.camera:move(0, -self.scrollspeed)
   end
@@ -33,8 +37,8 @@ function CameraManager:update(dt)
     self.camera:move(-self.scrollspeed, 0)
   end
 
-  self.camera.x = math:clamp(0, self.camera.x, world.size.x * world.grain)
-  self.camera.y = math:clamp(0, self.camera.y, world.size.y * world.grain)
+  self.camera.x = math:clamp(0 + w / 2, self.camera.x, world.size.x * world.grain - w / 2 + 240)
+  self.camera.y = math:clamp(0 + h / 2 - 32, self.camera.y, world.size.y * world.grain - h / 2 + 32)
 
   Debug:print("Camera position: "..self.camera.x..", "..self.camera.y)
 end
