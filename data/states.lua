@@ -149,6 +149,17 @@ STATE.DEMOLISH.update = function(self, dt)
             love.audio.play(sndClick)
         end
         self.area[2] = world:getWorldPosition()
+
+        local minx = math.min(self.area[1].x, self.area[2].x)
+        local miny = math.min(self.area[1].y, self.area[2].y)
+
+        local maxx = math.max(self.area[1].x, self.area[2].x)
+        local maxy = math.max(self.area[1].y, self.area[2].y)
+
+        self.area[1].x = minx
+        self.area[1].y = miny
+        self.area[2].x = maxx
+        self.area[2].y = maxy
     else
         if #self.area > 0 then
             buildingManager:removeBuildingsWithin(self.area[1], self.area[2]) 
